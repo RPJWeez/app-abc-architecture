@@ -1,0 +1,28 @@
+name: Validate Architecture
+
+on: [push, pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Structurizr CLI
+        run: |
+          curl -L https://github.com/structurizr/cli/releases/download/v2024.01.01/structurizr.sh -o structurizr.sh
+          chmod +x structurizr.sh
+      
+      - name: Export Model to JSON
+        run: ./structurizr.sh export -workspace architecture.dsl -format json > model.json
+      
+      - name: Install OPA
+        run: |
+          curl -L -o opa https://openpolicyagent.org/downloads/v0.62.1/opa_linux_amd64_static
+          chmod +x opa
+      
+      - name: Fetch Archetype Policy
+        run: curl -o conformance.rego https://raw.githubusercontent.com/your-org/enterprise-archetypes/main/web-app/conformance.rego
+      
+      - name: Validate Conformance
+        run: ./opa eval --format pretty --input model.json --data conformance.rego "data.archetype.webapp.deny"
