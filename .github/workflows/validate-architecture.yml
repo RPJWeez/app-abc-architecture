@@ -8,10 +8,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Export Model to JSON using Structurizr CLI Docker
+      - name: Install Structurizr CLI
         run: |
-          docker run --rm -v ${{ github.workspace }}:/usr/local/structurizr structurizr/cli:latest export -workspace architecture.dsl -format json -output .
-        # This mounts your repo and exports model.json in the workspace root
+          curl -L -o structurizr-cli.zip https://github.com/structurizr/cli/releases/download/v2025.11.09/structurizr-cli-2025.11.09.zip
+          unzip structurizr-cli.zip -d structurizr-cli
+          chmod +x structurizr-cli/structurizr.sh
+      
+      - name: Export Model to JSON
+        run: ./structurizr-cli/structurizr.sh export -workspace architecture.dsl -format json > model.json
       
       - name: Install OPA
         run: |
