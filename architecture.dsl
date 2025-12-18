@@ -3,7 +3,7 @@ workspace "App ABC Architecture" {
 		internalClient = softwareSystem "Internal Clients"
 		gateway = softwareSystem "Apigee Gateway"
 		gtm = softwareSystem "AVI Global Traffic Manager" "HA routing across datacenters"
-		app = softwareSystem "Application" "Active-Active" {
+		app = softwareSystem "Application" "My application desc" "Active-Active, tag2" {
 			backend = container "Backend" "API Layer" "Java/Spring"
 			database = container "Database" "Data Storage" "PostgreSQL"
 		}
