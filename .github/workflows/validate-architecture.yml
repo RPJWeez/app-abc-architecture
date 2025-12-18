@@ -15,7 +15,9 @@ jobs:
           chmod +x structurizr-cli/structurizr.sh
       
       - name: Export Model to JSON
-        run: ./structurizr-cli/structurizr.sh export -workspace architecture.dsl -format json > model.json
+        run: |
+          ./structurizr-cli/structurizr.sh export -workspace architecture.dsl -format json > model.json
+          cat model.json
       
       - name: Install OPA
         run: |
