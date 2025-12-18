@@ -28,11 +28,4 @@ jobs:
         run: curl -o rules.rego https://raw.githubusercontent.com/RPJWeez/architecture-patterns/refs/heads/master/architecture-patterns/archetypes/internal-api/internal-api-openshift/rules.rego
       
       - name: Validate Conformance
-        run: |
-          result=$(./opa eval --format json --input architecture.json --data rules.rego "data.archetype.webapp.deny")
-          echo "$result"
-          if [ "$result" != "[]" ] && [ "$result" != "null" ]; then
-            echo "Architecture validation failed!"
-            exit 1
-          fi
-          echo "Architecture conforms to archetype"
+        run: ./opa eval --fail --format pretty --input architecture.json --data rules.rego "data.archetype.webapp.deny"
