@@ -23,7 +23,7 @@ jobs:
           chmod +x opa
       
       - name: Fetch Archetype Policy
-        run: curl -o conformance.rego https://raw.githubusercontent.com/your-org/enterprise-archetypes/main/web-app/conformance.rego
+        run: curl -o rules.rego https://raw.githubusercontent.com/RPJWeez/architecture-patterns/refs/heads/master/architecture-patterns/archetypes/internal-api/internal-api-openshift/rules.rego
       
       - name: Validate Conformance
-        run: ./opa eval --fail-defined --format pretty --input model.json --data conformance.rego "data.archetype.webapp.deny"
+        run: ./opa eval --fail-defined --format pretty --input model.json --data rules.rego "data.archetype.webapp.deny"
