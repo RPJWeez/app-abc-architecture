@@ -8,13 +8,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Install Structurizr CLI
+      - name: Export Model to JSON using Structurizr CLI Docker
         run: |
-          curl -L https://github.com/structurizr/cli/releases/download/v2024.01.01/structurizr.sh -o structurizr.sh
-          chmod +x structurizr.sh
-      
-      - name: Export Model to JSON
-        run: ./structurizr.sh export -workspace architecture.dsl -format json > model.json
+          docker run --rm -v ${{ github.workspace }}:/usr/local/structurizr structurizr/cli:latest export -workspace architecture.dsl -format json -output .
+        # This mounts your repo and exports model.json in the workspace root
       
       - name: Install OPA
         run: |
@@ -25,4 +22,4 @@ jobs:
         run: curl -o conformance.rego https://raw.githubusercontent.com/your-org/enterprise-archetypes/main/web-app/conformance.rego
       
       - name: Validate Conformance
-        run: ./opa eval --format pretty --input model.json --data conformance.rego "data.archetype.webapp.deny"
+        run: ./opa eval --fail-defined --format pretty --input model.json --data conformance.rego "data.archetype.webapp.deny"
